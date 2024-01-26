@@ -33,33 +33,40 @@
   export default {
     setup() {
       const store = useStore();
-      
-      const name = ref('');
-      const email = ref('');
-      const message = ref('');
 
       const isValidEmail = (email) => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         return emailRegex.test(email);
       };
 
+      const name = ref('');
+      const email = ref('');
+      const message = ref('');
+
       if (store.name) {
-        name = store.name;
+        name.value = store.name;
       }
 
       if (store.email) {
-        email = store.email;
+        email.value = store.email;
       }
 
       const isFormValid = computed(() => {
-         return name.value.trim() !=='' && isValidEmail(email) && message.value.trim() !== '';
+        console.log('isFormValid computed');
+        console.log('name.value', name.value);
+        console.log('email.value', email.value);
+        console.log('message.value', message.value);
+        console.log(name.value.trim() !=='')
+        console.log(isValidEmail(email))
+        console.log(message.value.trim() !== '')
+        return name.value.trim() !=='' && isValidEmail(email.value) && message.value.trim() !== '';
       });
 
   
       const submitForm = async () => {
         if (isFormValid.value) {
           try {
-            const response = await fetch('https://httpbin.org/post', {
+            const response = await fetch('http://localhost:3001/responses', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
@@ -72,18 +79,15 @@
         });
 
         const responseData = await response.json();
-
+        
           store.setName(responseData.name);
           store.setEmail(responseData.email);
-
-          console.log('Form submitted!')
-          console.log('Response data:', responseData)
 
           alert('Form submitted!');
 
           resetMessage();
-        } catch {
-          console.error('Error submitting form!');
+        } catch (error) {
+          console.error('Error submitting form!', error);
         }
        } else {
         console.log('Form is invalid!');
@@ -108,6 +112,7 @@
       email,
       message,
       isFormValid,
+      isValidEmail,
       submitForm,
       resetForm,
       };

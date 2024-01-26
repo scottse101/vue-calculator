@@ -14,11 +14,11 @@ export const useStore = defineStore({
     },
 
     setName(name) {
-      this.state.contactFormData.name = name;
+      this.name = name;
     },
 
     setEmail(email) {
-      this.state.contactFormData.email = email;
+      this.email = email;
     },
 
   },
