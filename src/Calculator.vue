@@ -10,9 +10,6 @@
    
      </div>
    
-     
-   
-     
    
      <div class="calculator-container">
        <div class="display">
@@ -86,10 +83,8 @@
    
    <script>
    import * as math from "mathjs";
-   import router from "./store";
    
    export default {
-       name: 'App',
        data() {
            return {
                inputString: '',
@@ -128,7 +123,6 @@
                this.inputString = this.inputString.slice(0, -1);
            },
        },
-       components: { router }
    }
    
    </script>

@@ -1,74 +1,116 @@
 <template>
-    <div>
+
+<div id="calculator">
+       <router-link to="/">Calculator</router-link>
+       <router-view></router-view>   
+</div>
+
+  <div>
       <h2>Contact form</h2>
       <form @submit.prevent="submitForm" class="contact-form">
         <div class="form-group">
           <label for="name">Navn:</label>
-          <input v-model="formData.name" type="text" id="name" required />
+          <input v-model="name" type="text" id="name" required />
         </div>
         <div class="form-group">
           <label for="email">E-postadresse:</label>
-          <input v-model="formData.email" type="email" id="email" required />
+          <input v-model="email" type="email" id="email" required />
         </div>
         <div class="form-group">
           <label for="message">Melding:</label>
-          <textarea v-model="formData.message" id="message" required></textarea>
+          <textarea v-model="message" id="message" required></textarea>
         </div>
-        <button :disabled="!isValid" type="submit">Send</button>
-        <div class="status-message">{{ statusMessage }}</div>
+        <button :disabled="!isFormValid" type="submit">Submit</button>
       </form>
     </div>
-
   </template>
-  
-  <script>
-  export default {
-    data() {
-      return {
-        formData: {
-          name: '',
-          email: '',
-          message: '',
-        },
-      };
-    },
-    computed: {
-      isValid() {
-        return (
-          this.formData.name.trim() !== '' &&
-          this.formData.email.trim() !== '' &&
-          this.formData.message.trim() !== ''
-        );
-      },
-      statusMessage() {
-        return this.$store.state.statusMessage;
-      },
-    },
-    watch: {
-      formData: {
-        deep: true,
-        handler(newFormData) {
-          this.$store.commit('updateContactFormData', newFormData);
-        },
-      },
-    },
-    methods: {
-      submitForm() {
-        if (!this.isValid) {
-          this.$store.commit('updateStatusMessage', 'error'); 
-          return;
-        }
 
-        if (/\d/.test(this.formData.name)) {
-        this.$store.commit('updateStatusMessage', 'error');
-        this.$store.commit('updateStatusMessage', 'Name cannot contain numbers!');
-      return;
+  <script>
+  import { useStore } from './store.js';
+  import { ref } from 'vue';
+  import { computed } from 'vue';
+  
+  export default {
+    setup() {
+      const store = useStore();
+      
+      const name = ref('');
+      const email = ref('');
+      const message = ref('');
+
+      const isValidEmail = (email) => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return emailRegex.test(email);
+      };
+
+      if (store.name) {
+        name = store.name;
       }
 
-        this.$store.commit('updateStatusMessage', 'success'); // Simulerer backend-respons
-      },
+      if (store.email) {
+        email = store.email;
+      }
 
+      const isFormValid = computed(() => {
+         return name.value.trim() !=='' && isValidEmail(email) && message.value.trim() !== '';
+      });
 
+  
+      const submitForm = async () => {
+        if (isFormValid.value) {
+          try {
+            const response = await fetch('https://httpbin.org/post', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                name: name.value,
+                email: email.value,
+                message: message.value,
+              })
+        });
+
+        const responseData = await response.json();
+
+          store.setName(responseData.name);
+          store.setEmail(responseData.email);
+
+          console.log('Form submitted!')
+          console.log('Response data:', responseData)
+
+          alert('Form submitted!');
+
+          resetMessage();
+        } catch {
+          console.error('Error submitting form!');
+        }
+       } else {
+        console.log('Form is invalid!');
+       } 
+      };
+
+      const resetMessage = () => {
+        message.value = '';
+      };
+
+      const resetForm = () => {
+        store.setName('');
+        store.setEmail('');
+        name.value = '';
+        email.value = '';
+        message.value = '';
+      };
+
+      return {
+      store,
+      name,
+      email,
+      message,
+      isFormValid,
+      submitForm,
+      resetForm,
+      };
     },
   };
   </script>

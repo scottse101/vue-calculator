@@ -1,20 +1,25 @@
-import { createStore } from 'vuex';
+import { defineStore } from 'pinia';
 
-export default createStore({
-  state: {
-    contactFormData: {
+export const useStore = defineStore({
+  id: 'main',
+  state: () => ({
       name: '',
       email: '',
-      message: '',
+      statusMessage: '',
+  }),
+  actions: {
+    saveNameAndEmail(name, email) {
+      this.setName(name);
+      this.setEmail(email);
     },
-    statusMessage: '',
-  },
-  mutations: {
-    updateContactFormData(state, payload) {
-      state.contactFormData = { ...state.contactFormData, ...payload };
+
+    setName(name) {
+      this.state.contactFormData.name = name;
     },
-    updateStatusMessage(state, message) {
-      state.statusMessage = message;
+
+    setEmail(email) {
+      this.state.contactFormData.email = email;
     },
+
   },
 });

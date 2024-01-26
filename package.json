@@ -6,11 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "cypress": "cypress open",
+    "test:unit": "vitest"
   },
   "dependencies": {
+    "cypress": "^13.6.3",
     "mathjs": "^12.3.0",
-    "vue": "^3.3.11"
+    "pinia": "^2.1.7",
+    "vitest": "^1.2.1",
+    "vue": "^3.3.11",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.5.2",
