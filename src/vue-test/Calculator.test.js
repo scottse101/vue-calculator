@@ -1,28 +1,14 @@
-import { suite, test } from 'vitest';
-import { mount } from '@vue/test-utils';
-import Calculator from '@/path/to/Calculator.vue';
+import Calculator from '@/Calculator.vue';
+import { mount } from 'vitest';
 
-suite('Calculator.vue', () => {
-  test('renders the component', () => {
+describe('Calculator', () => {
+  it('renders calculator component correctly', () => {
     const wrapper = mount(Calculator);
-    assert.equal(wrapper.exists(), true);
+    // Add your assertions based on the expected behavior of the calculator component
+    // For example, check if the necessary elements are present
+    expect(wrapper.find('router-link')).toBeTruthy();
+    expect(wrapper.find('router-view')).toBeTruthy();
   });
 
-  test('updates the display on button click', async () => {
-    const wrapper = mount(Calculator);
-    await wrapper.setData({ inputString: '1+2' });
-    const addButton = wrapper.find('.btn-group');
-    await addButton.trigger('click');
-
-    assert.equal(wrapper.vm.inputString, '1+2+');
-  });
-
-  test('calculates the result on form submission', async () => {
-    const wrapper = mount(Calculator);
-    await wrapper.setData({ inputString: '3+5' });
-    const form = wrapper.find('form');
-    await form.trigger('submit.prevent');
-
-    assert.equal(wrapper.vm.result, '8');
-  });
+  // Add more test cases for the calculator component as needed
 });

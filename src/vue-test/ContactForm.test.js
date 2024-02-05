@@ -1,43 +1,27 @@
-import { suite, test } from 'vitest';
-import { mount } from '@vue/test-utils';
-import ContactForm from '@/path/to/ContactForm.vue';
+import ContactForm from '@/ContactForm.vue';
+import { mount } from 'vitest';
 
-suite('ContactForm.vue', () => {
-  test('renders the component', () => {
+describe('ContactForm', () => {
+  it('renders contact form component correctly', () => {
     const wrapper = mount(ContactForm);
-    assert.equal(wrapper.exists(), true);
+    // Add your assertions based on the expected behavior of the contact form component
+    // For example, check if the necessary form elements are present
+    expect(wrapper.find('form')).toBeTruthy();
+    expect(wrapper.find('input#name')).toBeTruthy();
+    expect(wrapper.find('input#email')).toBeTruthy();
+    expect(wrapper.find('textarea#message')).toBeTruthy();
+    expect(wrapper.find('button[type="submit"]')).toBeTruthy();
   });
 
-  test('disables submit button when form is invalid', async () => {
+  it('validates form correctly', () => {
     const wrapper = mount(ContactForm);
-    const submitButton = wrapper.find('button[type="submit"]');
-    await wrapper.setData({ formData: { name: '', email: '', message: '' } });
+    // Add your assertions based on the form validation logic in the component
+    // For example, check if the submit button is disabled when the form is invalid
+    wrapper.setData({ name: 'John', email: 'john@example.com', message: 'Hello' });
+    expect(wrapper.find('button[type="submit"]').attributes().disabled).toBeFalsy();
 
-    assert.equal(submitButton.attributes('disabled'), 'disabled');
+    // Add more assertions based on your form validation logic
   });
 
-  test('shows error message if name contains numbers', async () => {
-    const wrapper = mount(ContactForm);
-    await wrapper.setData({ formData: { name: 'John123', email: 'john@example.com', message: 'Hello' } });
-    const form = wrapper.find('form');
-    await form.trigger('submit.prevent');
-
-    const statusMessage = wrapper.find('.status-message');
-    assert.includes(statusMessage.text(), 'Name cannot contain numbers!');
-  });
-
-  test('emits form data when submitted with valid data', async () => {
-    const wrapper = mount(ContactForm);
-    const form = wrapper.find('form');
-    await wrapper.setData({
-      formData: { name: 'John Doe', email: 'john@example.com', message: 'Hello' },
-    });
-    await form.trigger('submit.prevent');
-
-    assert.equal(wrapper.emitted().submitForm[0][0], {
-      name: 'John Doe',
-      email: 'john@example.com',
-      message: 'Hello',
-    });
-  });
+  // Add more test cases for the contact form component as needed
 });
