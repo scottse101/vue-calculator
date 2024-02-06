@@ -1,5 +1,6 @@
-import Calculator from '@/Calculator.vue';
-import { mount } from 'vitest';
+import Calculator from '@/components/Calculator.vue';
+import { mount } from '@vue/test-utils';
+import { describe, it, expect } from 'vitest';  
 
 describe('Calculator', () => {
   it('renders calculator component correctly', () => {
@@ -10,5 +11,4 @@ describe('Calculator', () => {
     expect(wrapper.find('router-view')).toBeTruthy();
   });
 
-  // Add more test cases for the calculator component as needed
 });

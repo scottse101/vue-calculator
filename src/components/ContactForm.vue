@@ -26,7 +26,7 @@
   </template>
 
   <script>
-  import { useStore } from './store.js';
+  import { useStore } from '../store.js';
   import { ref } from 'vue';
   import { computed } from 'vue';
   
