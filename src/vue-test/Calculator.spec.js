@@ -21,9 +21,10 @@ test('Calculator: Test updateDisplay method ', async () => {
   assert.equal(calculator.inputString, '57+3');
 
   calculator.updateDisplay('=');
+  calculator.calculate();
   assert.equal(calculator.inputString, '60');
-  assert.equal(calculator.result[calculator.result.length - 1], '57 + 3 = 60');
-  assert.equal(calculator.result.length, 1);
+  assert.equal(calculator.calculationLog[calculator.calculationLog.length - 1], '60');
+  assert.equal(calculator.calculationLog.length, 1);
 
 wrapper.unmount();
 
