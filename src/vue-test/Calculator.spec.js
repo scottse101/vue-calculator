@@ -20,6 +20,11 @@ test('Calculator: Test updateDisplay method ', async () => {
   calculator.updateDisplay('3');
   assert.equal(calculator.inputString, '57+3');
 
+  calculator.updateDisplay('=');
+  assert.equal(calculator.inputString, '60');
+  assert.equal(calculator.result[calculator.result.length - 1], '57 + 3 = 60');
+  assert.equal(calculator.result.length, 1);
+
 wrapper.unmount();
 
 });
