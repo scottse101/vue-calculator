@@ -13,7 +13,7 @@
    
      <div class="calculator-container">
        <div class="display">
-         <form action="" @submit.prevent="calucate">
+         <form action="" @submit.prevent="calculate">
            <input class="input" type="text" readonly="readonly" v-model="inputString">
            <input class="equal" type="submit" value="=">
          </form>
@@ -101,7 +101,7 @@
                    console.error('Invalid Input');
                }
            },
-           calucate() {
+           calculate() {
                try {
                    this.result = "" + math.evaluate(this.inputString) === "Infinity" ? "Invalid Input" : "" + math.evaluate(this.inputString);
                    console.log(this.result);

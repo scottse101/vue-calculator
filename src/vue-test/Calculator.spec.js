@@ -1,14 +1,25 @@
 import Calculator from '@/components/Calculator.vue';
 import { mount } from '@vue/test-utils';
-import { describe, it, expect } from 'vitest';  
+import { describe, it, expect, assert, test } from 'vitest';
 
-describe('Calculator', () => {
-  it('renders calculator component correctly', () => {
-    const wrapper = mount(Calculator);
-    // Add your assertions based on the expected behavior of the calculator component
-    // For example, check if the necessary elements are present
-    expect(wrapper.find('router-link')).toBeTruthy();
-    expect(wrapper.find('router-view')).toBeTruthy();
-  });
+test('Calculator: Test updateDisplay method ', async () => {
+
+  const wrapper = mount(Calculator);
+
+  const calculator = wrapper.vm;
+
+  calculator.updateDisplay('5');
+  assert.equal(calculator.inputString, '5');
+
+  calculator.updateDisplay('7');
+  assert.equal(calculator.inputString, '57');
+
+  calculator.updateDisplay('+');
+  assert.equal(calculator.inputString, '57+');
+
+  calculator.updateDisplay('3');
+  assert.equal(calculator.inputString, '57+3');
+
+wrapper.unmount();
 
 });
