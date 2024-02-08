@@ -1,6 +1,6 @@
 import Calculator from "@/components/Calculator.vue";
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, assert, test } from "vitest";
+import { assert, test } from "vitest";
 
 test("Calculator: Test updateDisplay method ", async () => {
   const wrapper = mount(Calculator);
