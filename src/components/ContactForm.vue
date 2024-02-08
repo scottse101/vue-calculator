@@ -1,112 +1,114 @@
 <template>
-
-<div id="calculator">
-       <router-link to="/">Calculator</router-link>
-       <router-view></router-view>   
-</div>
+  <div id="calculator">
+    <router-link to="/">Calculator</router-link>
+    <router-view></router-view>
+  </div>
 
   <div>
-      <h2>Contact form</h2>
-      <form @submit.prevent="submitForm" class="contact-form">
-        <div class="form-group">
-          <label for="name">Navn:</label>
-          <input v-model="name" type="text" id="name" required />
-        </div>
-        <div class="form-group">
-          <label for="email">E-postadresse:</label>
-          <input v-model="email" type="email" id="email" required />
-        </div>
-        <div class="form-group">
-          <label for="message">Melding:</label>
-          <textarea v-model="message" id="message" required></textarea>
-        </div>
-        <button :disabled="!isFormValid" type="submit">Submit</button>
-      </form>
-    </div>
-  </template>
+    <h2>Contact form</h2>
+    <form @submit.prevent="submitForm" class="contact-form">
+      <div class="form-group">
+        <label for="name">Navn:</label>
+        <input v-model="name" type="text" id="name" required />
+      </div>
+      <div class="form-group">
+        <label for="email">E-postadresse:</label>
+        <input v-model="email" type="email" id="email" required />
+      </div>
+      <div class="form-group">
+        <label for="message">Melding:</label>
+        <textarea v-model="message" id="message" required></textarea>
+      </div>
+      <button :disabled="!isFormValid" type="submit">Submit</button>
+    </form>
+  </div>
+</template>
 
-  <script>
-  import { useStore } from '../store.js';
-  import { ref } from 'vue';
-  import { computed } from 'vue';
-  
-  export default {
-    setup() {
-      const store = useStore();
+<script>
+import { useStore } from "../store.js";
+import { ref } from "vue";
+import { computed } from "vue";
 
-      const isValidEmail = (email) => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        return emailRegex.test(email);
-      };
+export default {
+  setup() {
+    const store = useStore();
 
-      const name = ref('');
-      const email = ref('');
-      const message = ref('');
+    const isValidEmail = (email) => {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return emailRegex.test(email);
+    };
 
-      if (store.name) {
-        name.value = store.name;
-      }
+    const name = ref("");
+    const email = ref("");
+    const message = ref("");
 
-      if (store.email) {
-        email.value = store.email;
-      }
+    if (store.name) {
+      name.value = store.name;
+    }
 
-      const isFormValid = computed(() => {
-        console.log('isFormValid computed');
-        console.log('name.value', name.value);
-        console.log('email.value', email.value);
-        console.log('message.value', message.value);
-        console.log(name.value.trim() !=='')
-        console.log(isValidEmail(email))
-        console.log(message.value.trim() !== '')
-        return name.value.trim() !=='' && isValidEmail(email.value) && message.value.trim() !== '';
-      });
+    if (store.email) {
+      email.value = store.email;
+    }
 
-  
-      const submitForm = async () => {
-        if (isFormValid.value) {
-          try {
-            const response = await fetch('http://localhost:3001/responses', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                name: name.value,
-                email: email.value,
-                message: message.value,
-              })
-        });
+    const isFormValid = computed(() => {
+      console.log("isFormValid computed");
+      console.log("name.value", name.value);
+      console.log("email.value", email.value);
+      console.log("message.value", message.value);
+      console.log(name.value.trim() !== "");
+      console.log(isValidEmail(email));
+      console.log(message.value.trim() !== "");
+      return (
+        name.value.trim() !== "" &&
+        isValidEmail(email.value) &&
+        message.value.trim() !== ""
+      );
+    });
 
-        const responseData = await response.json();
-        
+    const submitForm = async () => {
+      if (isFormValid.value) {
+        try {
+          const response = await fetch("http://localhost:3001/responses", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              name: name.value,
+              email: email.value,
+              message: message.value,
+            }),
+          });
+
+          const responseData = await response.json();
+
           store.setName(responseData.name);
           store.setEmail(responseData.email);
 
-          alert('Form submitted!');
+          alert("Form submitted!");
 
           resetMessage();
         } catch (error) {
-          console.error('Error submitting form!', error);
+          console.error("Error submitting form!", error);
         }
-       } else {
-        console.log('Form is invalid!');
-       } 
-      };
+      } else {
+        console.log("Form is invalid!");
+      }
+    };
 
-      const resetMessage = () => {
-        message.value = '';
-      };
+    const resetMessage = () => {
+      message.value = "";
+    };
 
-      const resetForm = () => {
-        store.setName('');
-        store.setEmail('');
-        name.value = '';
-        email.value = '';
-        message.value = '';
-      };
+    const resetForm = () => {
+      store.setName("");
+      store.setEmail("");
+      name.value = "";
+      email.value = "";
+      message.value = "";
+    };
 
-      return {
+    return {
       store,
       name,
       email,
@@ -115,93 +117,91 @@
       isValidEmail,
       submitForm,
       resetForm,
-      };
-    },
-  };
-  </script>
-  
-  <style scoped>
-    .contact-form {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-width: 400px;
-    }
-    .form-group {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 1rem;
-    }
+    };
+  },
+};
+</script>
 
-    .form-group label {
-        margin-bottom: 0.5rem;
-    }
+<style scoped>
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 400px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
 
-    .form-group textarea {
-        padding: 0.5rem;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-    }
+.form-group label {
+  margin-bottom: 0.5rem;
+}
 
-    .form-group textarea {
-        min-height: 200px;
-    }
+.form-group textarea {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-    .status-message {
-        margin-top: 1rem;
-        padding: 0.5rem;
-        border-radius: 4px;
-    }
+.form-group textarea {
+  min-height: 200px;
+}
 
-    .status-message.success {
-        background-color: lightgreen;
-    }
+.status-message {
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 4px;
+}
 
-    .status-message.error {
-        background-color: lightcoral;
-    }
+.status-message.success {
+  background-color: lightgreen;
+}
 
-    .status-message.hidden {
-        display: none;
-    }
+.status-message.error {
+  background-color: lightcoral;
+}
 
-    button {
-        padding: 0.5rem;
-        border-radius: 4px;
-        border: none;
-        background-color: lightblue;
-        cursor: pointer;
-    }
+.status-message.hidden {
+  display: none;
+}
 
-    button:disabled {
-        background-color: lightgrey;
-        cursor: not-allowed;
-    }
+button {
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  background-color: lightblue;
+  cursor: pointer;
+}
 
-    button:hover {
-        background-color: lightgreen;
-    }
+button:disabled {
+  background-color: lightgrey;
+  cursor: not-allowed;
+}
 
-    button:active {
-        background-color: green;
-        color: white;
-    }
+button:hover {
+  background-color: lightgreen;
+}
 
-    button:focus {
-        outline: none;
-    }
+button:active {
+  background-color: green;
+  color: white;
+}
 
-    button:disabled:hover {
-        background-color: lightgrey;
-    }
+button:focus {
+  outline: none;
+}
 
-    button:disabled:active {
-        background-color: lightgrey;
-    }
+button:disabled:hover {
+  background-color: lightgrey;
+}
 
-    button:disabled:focus {
-        outline: none;
-    }
+button:disabled:active {
+  background-color: lightgrey;
+}
 
-  </style>
-  
+button:disabled:focus {
+  outline: none;
+}
+</style>

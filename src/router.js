@@ -1,16 +1,16 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import ContactForm from '../src/components/ContactForm.vue';
-import Calculator from '../src/components/Calculator.vue';
+import { createRouter, createWebHistory } from "vue-router";
+import ContactForm from "../src/components/ContactForm.vue";
+import Calculator from "../src/components/Calculator.vue";
 
 const routes = [
   {
-    path: '/',
-    name: 'Calculator',
+    path: "/",
+    name: "Calculator",
     component: Calculator,
   },
   {
-    path: '/ContactForm',
-    name: 'ContactForm',
+    path: "/ContactForm",
+    name: "ContactForm",
     component: ContactForm,
   },
 ];

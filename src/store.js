@@ -1,11 +1,11 @@
-import { defineStore } from 'pinia';
+import { defineStore } from "pinia";
 
 export const useStore = defineStore({
-  id: 'main',
+  id: "main",
   state: () => ({
-      name: '',
-      email: '',
-      statusMessage: '',
+    name: "",
+    email: "",
+    statusMessage: "",
   }),
   actions: {
     saveNameAndEmail(name, email) {
@@ -20,6 +20,5 @@ export const useStore = defineStore({
     setEmail(email) {
       this.email = email;
     },
-
   },
 });
