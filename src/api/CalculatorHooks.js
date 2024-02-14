@@ -7,9 +7,9 @@ const api = axios.create({
   timeout: 1000,
 });
 
-export const calculate = async (inputString) => {
+export const calculate = async (expression) => {
   try {
-    const response = await api.post('/calculate', { inputString });
+    const response = await api.post('/calculate', { expression });
     return response.data;
   } catch (error) {
     console.error('Error while calculating result:', error);
@@ -17,9 +17,9 @@ export const calculate = async (inputString) => {
   }
 };
 
-export const calculateJSON = async (inputString) => {
+export const calculateJSON = async (expression) => {
     try {
-        const response = await api.post('/calculate/json', { inputString });
+        const response = await api.post('/calculate/json', { expression });
         return response.data;
     } catch (error) {
         console.error('Error while calculating JSON:', error);

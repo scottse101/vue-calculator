@@ -154,16 +154,19 @@ export default {
     async calculate() {
       try {
         const response = await calculate(this.inputString);
-        
-        if (response.success) {
-          this.result = response.result;
-          this.inputString = this.result;
-          this.calculationLog.push(this.inputString);
-        } else {
-          console.error(response.error);
-        }
+        console.log('response', response);
+
+        const responseJSON = await calculateJSON(this.inputString);
+        console.log('responseJSON', responseJSON);
+
+        this.inputString = this.inputString + " = " + response.result;
+        this.calculationLog.push(response.result);
+
       } catch (error) {
-        console.error("Error while calculating:", error);
+        console.error("Error calculating result", error);
+        this.inputString = 'undefined';
+        this.calculationLog.push('undefined');
+        this.inputString = '';
       }
     },
     clearDisplay() {
@@ -179,6 +182,7 @@ export default {
   },
 };
 </script>
+
 
 <style>
 .app-container {
