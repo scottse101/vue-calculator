@@ -133,6 +133,7 @@
 
 <script>
 import * as math from "mathjs";
+import { calculate, calculateJSON } from '../api/CalculatorHooks';
 
 export default {
   data() {
@@ -150,17 +151,19 @@ export default {
         console.error("Invalid Input");
       }
     },
-    calculate() {
+    async calculate() {
       try {
-        this.result =
-          "" + math.evaluate(this.inputString) === "Infinity"
-            ? "Invalid Input"
-            : "" + math.evaluate(this.inputString);
-        console.log(this.result);
-        this.inputString = this.result;
-        this.calculationLog.push(this.inputString);
+        const response = await calculate(this.inputString);
+        
+        if (response.success) {
+          this.result = response.result;
+          this.inputString = this.result;
+          this.calculationLog.push(this.inputString);
+        } else {
+          console.error(response.error);
+        }
       } catch (error) {
-        console.error("Invalid Input");
+        console.error("Error while calculating:", error);
       }
     },
     clearDisplay() {
