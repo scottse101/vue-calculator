@@ -147,27 +147,14 @@ export default {
     updateDisplay(value) {
       if (/[\d+\-*/%.]/.test(value)) {
         this.inputString += value;
+        console.log(this.inputString)
       } else {
         console.error("Invalid Input");
       }
     },
     async calculate() {
-      try {
-        const response = await calculate(this.inputString);
-        console.log('response', response);
-
-        const responseJSON = await calculateJSON(this.inputString);
-        console.log('responseJSON', responseJSON);
-
-        this.inputString = this.inputString + " = " + response.result;
-        this.calculationLog.push(response.result);
-
-      } catch (error) {
-        console.error("Error calculating result", error);
-        this.inputString = 'undefined';
-        this.calculationLog.push('undefined');
-        this.inputString = '';
-      }
+      const result = await calculate(this.inputString);
+      console.log('Result:', result);
     },
     clearDisplay() {
       this.inputString = "";
