@@ -1,7 +1,7 @@
 <template>
   <div class="app-contatiner">
     <div id="contact-form-container" class="form-container">
-      <router-link to="/">Calculator</router-link>
+      <router-link to="/Calculator">Calculator</router-link>
       <router-link to="/ContactForm">Contact</router-link>
 
       <router-view></router-view>

@@ -1,10 +1,16 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ContactForm from "../src/components/ContactForm.vue";
 import Calculator from "../src/components/Calculator.vue";
+import LoginForm from "../src/components/LoginForm.vue";
 
 const routes = [
   {
     path: "/",
+    name: "LoginForm",
+    component: LoginForm,
+  },
+  {
+    path: "/Calculator",
     name: "Calculator",
     component: Calculator,
   },
@@ -16,7 +22,7 @@ const routes = [
 ];
 
 const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHistory(import.meta.env.BASE_URL),
   routes,
 });
 
