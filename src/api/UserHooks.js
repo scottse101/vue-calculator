@@ -59,3 +59,13 @@ export const getUserIdByUsername = (username) => {
       throw error;
     });
 };
+
+export const getPasswordByUsername = (username) => {
+  return api.get(`/password?username=${username}`)
+    .then(response => {
+      return response.data;
+    })
+    .catch(error => {
+      throw error;
+    });
+};

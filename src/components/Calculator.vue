@@ -145,7 +145,7 @@
 
 <script>
 import { calculate, getCalculationResultsByUserId } from '@/api/CalculatorHooks';
-import { getUserByUsername, getUserIdByUsername } from '@/api/UserHooks';
+import { getUserByUsername, getUserIdByUsername, getPasswordByUsername } from '@/api/UserHooks';
 import { createCalculationRequest } from '@/utils/createCalculationRequest';
 
 export default {
@@ -242,8 +242,12 @@ export default {
     async calculateAndSaveResult(equation) {
       try {
         const username = localStorage.getItem('username');
-        const user = await getUserByUsername(username);
+        const userId = await getUserIdByUsername(username);
+        const password = await getPasswordByUsername(username);
+        const user = { id: userId, username: username, password: password};
+
         const CalculationRequest = createCalculationRequest(equation, user); 
+
         console.log('User name:', getUserByUsername(username));
         console.log('Calculation Request:', CalculationRequest);
 
