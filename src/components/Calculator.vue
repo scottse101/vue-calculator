@@ -158,7 +158,7 @@
 <script>
 import { calculate, getCalculationResultByUserId } from '@/api/CalculatorHooks';
 import { getUserByUsername, getUserIdByUsername } from '@/api/UserHooks';
-import { createCalculationRequest } from '@utils/CreateCalculationRequest';
+import { createCalculationRequest } from '@/utils/createCalculationRequest';
 
 export default {
   created() {
@@ -255,7 +255,7 @@ export default {
       try {
         const username = localStorage.getItem('username');
         const user = await getUserByUsername(username);
-        /*const CalculationRequest = createCalculationRequest(equation, user); */
+        const CalculationRequest = createCalculationRequest(equation, user); 
 
         const result = await calculate(equation);
         console.log('Result:', result);
