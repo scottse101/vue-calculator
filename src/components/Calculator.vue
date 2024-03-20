@@ -1,4 +1,5 @@
 <template>
+  <button class="logout-button" @click="logout">Logout</button>
   <div class="app-contatiner">
     <div id="contact-form-container" class="form-container">
       <router-link to="/Calculator">Calculator</router-link>
@@ -26,6 +27,34 @@
         <ul>
           <li v-for="calculation in calculationLog">{{ calculation }}</li>
         </ul>
+      </div>
+
+            <!-- Output Area -->
+            <div id="output-area" class="output-area">
+        <div class="current-expression">
+          <input type="text" v-model="expression" readonly />
+        </div>
+        <div v-for="(calculationResult, index) in calculationResults" :key="index" class="previous-answer" @click="setExpression(calculationResult.expression, calculationResult.answer)">
+          {{ calculationResult.expression }} = {{ calculationResult.answer }}
+        </div>
+      </div>
+
+      <!-- Pagination Buttons -->
+      <div id="pagination-buttons">
+        <button @click="prevPage" :disabled="currentPage === 0">Previous</button>
+        <button @click="nextPage" :disabled="currentPage === totalPages - 1">Next</button>
+      </div>
+
+      <!-- Feedback Button -->
+      <router-link id="router-link" to="/contactform">
+        <button id="feedback-button">Give us feedback!</button>
+      </router-link>
+
+      <!-- Error Message -->
+      <div v-if="errorMessage" class="alert-overlay" @click="dismissAlert">
+        <div class="alert-box">
+          <p class="alert-message">{{ errorMessage }}</p>
+        </div>
       </div>
 
       <div class="buttons">
@@ -117,12 +146,7 @@
             <button @click="() => updateDisplay('%')" button class="btn">
               %
             </button>
-            <button
-              @click="() => updateDisplay('/')"
-              button
-              class="btn btn-group"
-            >
-              /
+            <button @click="() => updateDisplay('/')" button class="btn btn-group">
             </button>
           </div>
         </div>
@@ -132,17 +156,29 @@
 </template>
 
 <script>
-import * as math from "mathjs";
-import { calculate, calculateJSON } from '../api/CalculatorHooks';
+import { calculate, getCalculationResultByUserId } from '@/api/CalculatorHooks';
+import { getUserByUsername, getUserIdByUsername } from '@/api/UserHooks';
+import { createCalculationRequest } from '@utils/CreateCalculationRequest';
 
 export default {
+  created() {
+    const username = localStorage.getItem('username');
+    console.log('Logged in user:', username);
+
+    this.loadCalculationResults(0);
+  },
+
   data() {
     return {
       inputString: "",
       result: "",
       calculationLog: [],
+      currentPage: 0,
+      pageSize: 10,
+      errorMessage: "",
     };
   },
+
   methods: {
     updateDisplay(value) {
       if (/[\d+\-*/%.]/.test(value)) {
@@ -152,20 +188,92 @@ export default {
         console.error("Invalid Input");
       }
     },
+
     async calculate() {
       const result = await calculate(this.inputString);
       console.log('Result:', result);
     },
+
     clearDisplay() {
       this.inputString = "";
       this.result = "";
     },
+
     negativeSign() {
       this.inputString = this.inputString * -1;
     },
+
     deleteValue() {
       this.inputString = this.inputString.slice(0, -1);
     },
+
+    setExpression(inputString, answer) {
+      this.inputString = inputString + " = " + answer;
+    },
+
+    logout() {
+      localStorage.removeItem('username');
+      this.$router.push('/login');
+    },
+
+    async pushAnswer() {
+      this.inputString = this.inputString + " = " + this.answer;
+      await this.loadCalculationResults(this.currentPage);
+    },
+  
+    async loadCalculationResults(currentPage) {
+      try {
+        const username = localStorage.getItem('username');
+        const userId = await getUserIdByUsername(username);
+
+        const response = await getCalculationResultByUserId(userId, currentPage, this.pageSize);
+
+        this.calculationResults = response.content;
+
+        console.log('Calculation Results:', this.calculationResults);
+        this.currentPage = response.number;
+        this.totalPages = response.totalPages;
+      } catch (error) {
+        console.error('Error:', error);
+        this.errorMessage = error.message;
+      }
+    },
+
+    async prevPage() {
+      if (this.currentPage > 0) {
+        await this.loadCalculationResults(this.currentPage - 1);
+      }
+    },
+
+    async nextPage() {
+      if (this.currentPage < this.totalPages - 1) {
+        await this.loadCalculationResults(this.currentPage + 1);
+      }
+    },
+
+    async calculateAndSaveResult(equation) {
+      try {
+        const username = localStorage.getItem('username');
+        const user = await getUserByUsername(username);
+        /*const CalculationRequest = createCalculationRequest(equation, user); */
+
+        const result = await calculate(equation);
+        console.log('Result:', result);
+
+        await this.pushAnswer();
+
+      } catch (error) {
+        console.error('Error:', error);
+        if (error.response && error.response.status === 400) {
+          this.errorMessage = 'Input a valid equation';
+        } else {
+          this.errorMessage = 'An error occured. Please try again.';
+        
+        }
+      }
+    }
+
+
   },
 };
 </script>
