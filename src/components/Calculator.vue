@@ -45,18 +45,6 @@
         <button @click="nextPage" :disabled="currentPage === totalPages - 1">Next</button>
       </div>
 
-      <!-- Feedback Button -->
-      <router-link id="router-link" to="/contactform">
-        <button id="feedback-button">Give us feedback!</button>
-      </router-link>
-
-      <!-- Error Message -->
-      <div v-if="errorMessage" class="alert-overlay" @click="dismissAlert">
-        <div class="alert-box">
-          <p class="alert-message">{{ errorMessage }}</p>
-        </div>
-      </div>
-
       <div class="buttons">
         <div class="row">
           <div class="columns">
@@ -354,4 +342,36 @@ export default {
   align-items: flex-start;
   padding: 20px;
 }
+
+.previous-answer {
+  margin-top: 10px;
+  cursor: pointer;
+  border: 2px solid #000;
+  padding: 10px;
+  border-radius: 5px;
+  background-color: rgba(179, 179, 179, 0.25); /* RGBA color format with opacity set to 0.5 */
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+.previous-answer:hover {
+  background-color: rgba(204, 204, 204, 0.75); /* RGBA color format with opacity set to 0.5 */
+}
+
+.logout-button {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 8px 16px;
+  background-color: #cccccc;
+  border: 2px solid #000;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+  font-size: 1.2rem;
+}
+
+.logout-button:hover {
+  background-color: #b3b3b3;
+}
+
 </style>

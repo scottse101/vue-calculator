@@ -18,14 +18,23 @@ export const checkUsername = (username) => {
     });
 };
 
-export const login = (user) => {
-  return api.post('/login', user)
-    .then(response => {
-      return response.data;
-    })
-    .catch(error => {
-      throw error;
-    });
+export const login = async (user) => {
+  try {
+    const response = await api.post('/token', user);
+    const token = response.data;
+
+    sessionStorage.setItem('token', token);
+
+    return {
+      success: true,
+      data: token
+    };
+  } catch (error) {
+    return {
+      success: false,
+      error: error
+    };
+  }
 };
 
 export const register = (user) => {

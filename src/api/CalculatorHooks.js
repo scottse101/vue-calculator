@@ -1,18 +1,10 @@
-import axios from 'axios';
+import api from '../api/axiosConfig';
 import { CalculationRequest } from '@/types/CalculationRequest';
-
-
-const baseURL = 'http://localhost:8080';  
-
-const api = axios.create({
-  baseURL: baseURL,
-  timeout: 5000,
-});
 
 export const calculate = (calculationRequest) => {
   console.log(calculationRequest.equation);
   console.log(calculationRequest.user);
-  return api.post('/calculate', equation)
+  return api.post('/calculate', calculationRequest)
     .then(response => {
       return response.data;
     })
