@@ -17,6 +17,9 @@
 </template>
 
 <script>
+
+import { checkUsername, login, register } from '../api/UserHooks';
+
 export default {
     data() {
         return {
@@ -26,20 +29,52 @@ export default {
         }
     },
     methods: {
-        login() {
-            // In a real application, you would send the username and password to a server for validation
-            // For the sake of this example, let's assume the username is "admin" and password is "password"
-            if (this.username === 'admin' && this.password === 'password') {
-                // Successful login
-                alert('Login successful');
-                // You can redirect the user to another page here
-                this.$router.push('/Calculator');
-            } else {
-                // Failed login
-                this.errorMessage = 'Invalid username or password';
-            }
+    async handleSubmit() {
+      try {
+        const response = await checkUsername(this.username);
+        if (response === 'Username is available') {
+          await this.register();
+        } else {
+          await this.login();
         }
+      } catch (error) {
+        console.error('Error:', error);
+        this.errorMessage = 'An error occurred while processing your request';
+      }
+    },
+
+    async login() {
+      const user = {
+        username: this.username,
+        password: this.password
+      };
+
+      try {
+        const response = await login(user);
+        alert('Login successful');
+        this.$router.push({ path: '/calculator' });
+        localStorage.setItem('username', this.username);
+      } catch (error) {
+        console.error('Error:', error);
+        this.errorMessage = 'Invalid username or password';
+      }
+    },
+    
+    async register() {
+      const user = {
+        username: this.username,
+        password: this.password
+      };
+
+      try {
+        const response = await register(user);
+        alert('Registration successful');
+      } catch (error) {
+        console.error('Error:', error);
+        this.errorMessage = 'An error occurred while processing your request';
+      }
     }
+  }
 }
 </script>
 

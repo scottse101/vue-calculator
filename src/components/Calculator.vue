@@ -29,8 +29,8 @@
         </ul>
       </div>
 
-            <!-- Output Area -->
-            <div id="output-area" class="output-area">
+      <!-- Output Area -->
+      <div id="output-area" class="output-area">
         <div class="current-expression">
           <input type="text" v-model="expression" readonly />
         </div>
