@@ -156,7 +156,7 @@
 </template>
 
 <script>
-import { calculate, getCalculationResultByUserId } from '@/api/CalculatorHooks';
+import { calculate, getCalculationResultsByUserId } from '@/api/CalculatorHooks';
 import { getUserByUsername, getUserIdByUsername } from '@/api/UserHooks';
 import { createCalculationRequest } from '@/utils/createCalculationRequest';
 
@@ -226,7 +226,7 @@ export default {
         const username = localStorage.getItem('username');
         const userId = await getUserIdByUsername(username);
 
-        const response = await getCalculationResultByUserId(userId, currentPage, this.pageSize);
+        const response = await getCalculationResultsByUserId(userId, currentPage, this.pageSize);
 
         this.calculationResults = response.content;
 

@@ -1,11 +1,7 @@
-const createCalculationRequest = (equation, user) => {
+export const createCalculationRequest = (equation, user) => {
     return {
       equation,
       user,
     };
-  };
-  
-  module.exports = {
-    createCalculationRequest,
   };
   

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import CalculationRequest from '@/types/CalculationRequest';
+import { CalculationRequest } from '@/types/CalculationRequest';
 
 
 const baseURL = 'http://localhost:8080';  
@@ -9,9 +9,9 @@ const api = axios.create({
   timeout: 5000,
 });
 
-export const calculate = (CalculationRequest) => {
-  console.log(CalculationRequest.equation);
-  console.log(CalculationRequest.user);
+export const calculate = (calculationRequest) => {
+  console.log(calculationRequest.equation);
+  console.log(calculationRequest.user);
   return api.post('/calculate', equation)
     .then(response => {
       return response.data;
@@ -31,7 +31,7 @@ export const calculateJSON = async (equation) => {
     }
 };
 
-const getCalculationResultsByUserId = (userId, page, pageSize = 10) => {
+export const getCalculationResultsByUserId = (userId, page, pageSize = 10) => {
   const url = `/calculation-results/${userId}?page=${page}&size=${pageSize}`;
 
   return api
