@@ -1,7 +1,7 @@
 <template>
     <div class="login-container">
         <h1 class="login-title">Login</h1>
-        <form @submit.prevent="login" class="login-form">
+        <form @submit.prevent="handleSubmit" class="login-form">
             <div class="form-group">
                 <label for="username" class="form-label">Username:</label>
                 <input type="text" id="username" v-model="username" class="form-input">
@@ -18,64 +18,42 @@
 
 <script>
 
-import { checkUsername, login, register } from '../api/UserHooks';
+import { checkUsername, login, register, getUserByUsername } from '../api/UserHooks';
 
 export default {
-    data() {
-        return {
-            username: '',
-            password: '',
-            errorMessage: ''
-        }
-    },
-    methods: {
+  data() {
+    return {
+      username: '',
+      password: '',
+      errorMessage: ''
+    }
+  },
+  methods: {
     async handleSubmit() {
-      try {
-        const response = await checkUsername(this.username);
-        if (response === 'Username is available') {
-          await this.register();
-        } else {
-          await this.login();
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        this.errorMessage = 'An error occurred while processing your request';
-      }
-    },
-
-    async login() {
+    try {
       const user = {
         username: this.username,
         password: this.password
       };
 
-      try {
-        const response = await login(user);
+      const loginResponse = await login(user);
+
+      if (loginResponse.success) {
         alert('Login successful');
         this.$router.push({ path: '/calculator' });
         localStorage.setItem('username', this.username);
-      } catch (error) {
-        console.error('Error:', error);
-        this.errorMessage = 'Invalid username or password';
+      } else {
+        // If login failed, show error message
+        this.errorMessage = loginResponse.error ? 'Invalid username or password' : 'An error occurred while processing your request';
       }
-    },
-    
-    async register() {
-      const user = {
-        username: this.username,
-        password: this.password
-      };
-
-      try {
-        const response = await register(user);
-        alert('Registration successful');
-      } catch (error) {
-        console.error('Error:', error);
-        this.errorMessage = 'An error occurred while processing your request';
-      }
+    } catch (error) {
+      console.error('Error:', error);
+      this.errorMessage = 'An error occurred while processing your request';
     }
+  },
   }
 }
+
 </script>
 
 <style>

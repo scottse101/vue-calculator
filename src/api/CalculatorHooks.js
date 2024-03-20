@@ -1,9 +1,13 @@
-import api from '../api/axiosConfig';
+import api from '@/api/axiosConfig';
 import { CalculationRequest } from '@/types/CalculationRequest';
 
-export const calculate = (calculationRequest) => {
-  console.log(calculationRequest.equation);
-  console.log(calculationRequest.user);
+export const calculate = (equation, user) => {
+  console.log(equation);
+  console.log(user);
+  const calculationRequest = {
+    equation: equation,
+    user: user
+  };
   return api.post('/calculate', calculationRequest)
     .then(response => {
       return response.data;

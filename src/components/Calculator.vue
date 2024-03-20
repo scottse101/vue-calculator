@@ -201,7 +201,7 @@ export default {
 
     logout() {
       localStorage.removeItem('username');
-      this.$router.push('/login');
+      this.$router.push('/');
     },
 
     async pushAnswer() {
@@ -244,8 +244,10 @@ export default {
         const username = localStorage.getItem('username');
         const user = await getUserByUsername(username);
         const CalculationRequest = createCalculationRequest(equation, user); 
+        console.log('User name:', getUserByUsername(username));
+        console.log('Calculation Request:', CalculationRequest);
 
-        const result = await calculate(equation);
+        const result = await calculate(equation, user);
         console.log('Result:', result);
 
         await this.pushAnswer();
